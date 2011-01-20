@@ -208,7 +208,7 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
             autoSize: false // True to size the input for the date format, false to leave as is
         };
         $.extend(this._defaults, this.regional['']);
-        this.dpDiv = $('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-helper-hidden-accessible"></div>');
+        this.dpDiv = $('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>');
     }
 
     $.extend(Datetimepicker.prototype, {

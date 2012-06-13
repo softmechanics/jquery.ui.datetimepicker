@@ -205,7 +205,10 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
             altFormat: '', // The date format to use for the alternate field
             constrainInput: false, // The input is constrained by the current date format
             showButtonPanel: false, // True to show button panel, false to not show it
-            autoSize: false // True to size the input for the date format, false to leave as is
+            autoSize: false, // True to size the input for the date format, false to leave as is
+            hour:  null, 
+            minute: null,
+            ampm: null
         };
         $.extend(this._defaults, this.regional['']);
         this.dpDiv = $('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>');
@@ -1490,6 +1493,7 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
                 html += group;
 
                 // Hour Drop Down
+                inst.currentHour = (hour== null ? inst.currentHour : hour);
                 html += 'Time <select id="DP_jQuery_Hour_' + dpuuid + '">';
                 for (i = 1; i < 13; i++) {
                     html += '<option value="' + i + '"';
@@ -1508,6 +1512,7 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
                 html += '</select>';
 
                 // Minute Drop Down
+                inst.currentMinute = (minute== null ? inst.currentMinute : minute);
                 html += '&nbsp;: <select id="DP_jQuery_Minute_' + dpuuid + '">';
                 for (i = 0; i < 60; i++) {
 
@@ -1524,6 +1529,7 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
                 html += '</select>';
 
                 //AM/PM drop Down
+                inst.currentAMPM = (ampm== null ? inst.currentAMPM : ampm);
                 html += ' <select id="DP_jQuery_AMPM_' + dpuuid + '"><option value="AM"';
                 if (inst.currentAMPM == "AM")
                     html += ' selected="selected"';

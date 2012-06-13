@@ -15,7 +15,7 @@ How to use datetimepicker in code.
   $(document).ready(function(){
  $('#date_time').datetimepicker({});
 });
-</script>m
+</script>
 
 This will call datetimepicker onclick of input field.
 

@@ -1887,3 +1887,27 @@ Date.prototype.format = function(mask, utc) {
     return RegexDateFormat(this, mask, utc);
 };
 
+Date.locale = {
+       monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+       dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+};
+
+//Get Month Name
+Date.prototype.getMonthName = function() {
+    return Date.locale.monthNames[this.getMonth()];
+}
+
+//Get Short Month Name
+Date.prototype.getShortMonthName = function() {
+    return Date.locale.monthNames[this.getMonth()].substr(0,3);
+}
+
+//Get Day Name
+Date.prototype.getDayName = function() {
+    return Date.locale.dayNames[this.getDay()];
+}
+
+//Get Short Day Name
+Date.prototype.getShortDayName = function() {
+    return Date.locale.dayNames[this.getDay()].substr(0,3);
+}

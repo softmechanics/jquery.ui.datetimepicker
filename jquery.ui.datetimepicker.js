@@ -833,15 +833,9 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
             inst.dpDiv[(this._get(inst, 'isRTL') ? 'add' : 'remove') +
 			'Class']('ui-datepicker-rtl');
 
-            $("#DP_jQuery_Hour_" + dpuuid).val(inst.selectedHour);
-            $("#DP_jQuery_Minute_" + dpuuid).val(inst.selectedMinute);
-            $("#DP_jQuery_AMPM_" + dpuuid).val(inst.selectedAMPM);
-
             if (inst == $.datetimepicker._curInst && $.datetimepicker._datepickerShowing && inst.input &&
 				inst.input.is(':visible') && !inst.input.is(':disabled'))
                 inst.input.focus();
-
-
         },
 
         /* Retrieve the size of left and top borders for an element.

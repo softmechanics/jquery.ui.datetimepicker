@@ -13,7 +13,7 @@ How to use datetimepicker in code.
 
 <script type='text/javascript'>
   $(document).ready(function(){
- $('#date_time').datetimepicker({});
+ $('#date_time').datetimepicker();
 });
 </script>
 

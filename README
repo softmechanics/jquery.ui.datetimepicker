@@ -1,4 +1,18 @@
 This is the jQuery dateTimePicker plugin from 
 http://www.projectcodegen.com/JQueryDateTimePicker.aspxk
 
-This repo contains a bug fix for a +100 year problem
+This repo contains a bug fix for a +100 year problem.
+
+How to use datetimepicker in code.
+1. Add this jquery.ui.datetimepicker.js file in your project
+2. Add datepicker.css file in your stylesheet
+
+<input type='text' id='date_time' name='date_time'></input>
+
+<script type='text/javascript'>
+  $(document).ready(function(){
+ $('#date_time').datetimepicker({});
+});
+</script>
+
+This will call datetimepicker onclick of input field.

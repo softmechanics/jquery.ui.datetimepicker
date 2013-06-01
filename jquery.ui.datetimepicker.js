@@ -205,7 +205,11 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
             altFormat: '', // The date format to use for the alternate field
             constrainInput: false, // The input is constrained by the current date format
             showButtonPanel: false, // True to show button panel, false to not show it
-            autoSize: false // True to size the input for the date format, false to leave as is
+            autoSize: false, // True to size the input for the date format, false to leave as is
+            hour:  null, 
+            minute: null,
+            ampm: null,
+	    timepicker : true
         };
         $.extend(this._defaults, this.regional['']);
         this.dpDiv = $('<div id="' + this._mainDivId + '" class="ui-datepicker ui-widget ui-widget-content ui-helper-clearfix ui-corner-all"></div>');
@@ -291,11 +295,11 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
 			}).bind("getData.datepicker", function(event, key) {
 			    return this._get(inst, key);
 			});
-            this._autoSize(inst);
             $.data(target, PROP_NAME, inst);
         },
 
         /* Make attachments based on settings. */
+            this._autoSize(inst);
         _attachments: function(input, inst) {
             var appendText = this._get(inst, 'appendText');
             var isRTL = this._get(inst, 'isRTL');
@@ -833,15 +837,9 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
             inst.dpDiv[(this._get(inst, 'isRTL') ? 'add' : 'remove') +
 			'Class']('ui-datepicker-rtl');
 
-            $("#DP_jQuery_Hour_" + dpuuid).val(inst.selectedHour);
-            $("#DP_jQuery_Minute_" + dpuuid).val(inst.selectedMinute);
-            $("#DP_jQuery_AMPM_" + dpuuid).val(inst.selectedAMPM);
-
             if (inst == $.datetimepicker._curInst && $.datetimepicker._datepickerShowing && inst.input &&
 				inst.input.is(':visible') && !inst.input.is(':disabled'))
                 inst.input.focus();
-
-
         },
 
         /* Retrieve the size of left and top borders for an element.
@@ -1409,6 +1407,10 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
             var calculateWeek = this._get(inst, 'calculateWeek') || this.iso8601Week;
             var defaultDate = this._getDefaultDate(inst);
             var html = '';
+            var hour = this._get(inst, 'hour');
+            var minute = this._get(inst, 'minute');
+            var ampm = this._get(inst, 'ampm');
+            var timepicker = this._get(inst, 'timepicker');
             for (var row = 0; row < numMonths[0]; row++) {
                 var group = '';
                 for (var col = 0; col < numMonths[1]; col++) {
@@ -1438,7 +1440,7 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
                     for (var dow = 0; dow < 7; dow++) { // days of the week
                         var day = (dow + firstDay) % 7;
                         thead += '<th' + ((dow + firstDay + 6) % 7 >= 5 ? ' class="ui-datepicker-week-end"' : '') + '>' +
-						'<span title="' + dayNames[day] + '">' + dayNamesMin[day] + '</span></th>';
+				 '<span title="' + dayNames[day] + '">' + dayNamesMin[day].substring(0,2) + '</span></th>';
                     }
                     calender += thead + '</tr></thead><tbody>';
                     var daysInMonth = this._getDaysInMonth(drawYear, drawMonth);
@@ -1494,51 +1496,54 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
                 }
 
                 html += group;
+	        if(timepicker){
+                   // Hour Drop Down
+                   inst.currentHour = (hour== null ? inst.currentHour : hour);
+                   html += 'Time <select id="DP_jQuery_Hour_' + dpuuid + '">';
+                   for (i = 1; i < 13; i++) {
+                       html += '<option value="' + i + '"';
 
-                // Hour Drop Down
-                html += 'Time <select id="DP_jQuery_Hour_' + dpuuid + '">';
-                for (i = 1; i < 13; i++) {
-                    html += '<option value="' + i + '"';
+                       if (inst.currentHour == i) {
+                           html += ' selected="selected"';
+                       }
 
-                    if (inst.currentHour == i) {
-                        html += ' selected="selected"';
-                    }
+                       html += '>';
+                       if (i < 10) {
+                           html += '0';
+                       }
+                       html += i + '</option>';
+                  }
 
-                    html += '>';
-                    if (i < 10) {
-                        html += '0';
-                    }
-                    html += i + '</option>';
-                }
+                  html += '</select>';
 
-                html += '</select>';
+                  // Minute Drop Down
+                  inst.currentMinute = (minute== null ? inst.currentMinute : minute);
+                  html += '&nbsp;: <select id="DP_jQuery_Minute_' + dpuuid + '">';
+                  for (i = 0; i < 60; i++) {
 
-                // Minute Drop Down
-                html += '&nbsp;: <select id="DP_jQuery_Minute_' + dpuuid + '">';
-                for (i = 0; i < 60; i++) {
+                      html += '<option value="' + i + '"';
+                      if (inst.currentMinute == i) {
+                          html += ' selected="selected"';
+                      }
+                      html += '>';
+                      if (i < 10) {
+                         html += '0';
+                      }
+                      html += i + '</option>';
+                  }
+                  html += '</select>';
 
-                    html += '<option value="' + i + '"';
-                    if (inst.currentMinute == i) {
-                        html += ' selected="selected"';
-                    }
-                    html += '>';
-                    if (i < 10) {
-                        html += '0';
-                    }
-                    html += i + '</option>';
-                }
-                html += '</select>';
-
-                //AM/PM drop Down
-                html += ' <select id="DP_jQuery_AMPM_' + dpuuid + '"><option value="AM"';
-                if (inst.currentAMPM == "AM")
+                 //AM/PM drop Down
+                 inst.currentAMPM = (ampm== null ? inst.currentAMPM : ampm);
+                 html += ' <select id="DP_jQuery_AMPM_' + dpuuid + '"><option value="AM"';
+                 if (inst.currentAMPM == "AM")
                     html += ' selected="selected"';
-                html += '>AM</option><option value="PM"';
-                if (inst.currentAMPM == "PM")
+                 html += '>AM</option><option value="PM"';
+                 if (inst.currentAMPM == "PM")
                     html += ' selected="selected"';
-                html += '>PM</option></select>';
-
-            }
+                 html += '>PM</option></select>';
+	      }
+             }
 
             html += buttonPanel + ($.browser.msie && parseInt($.browser.version, 10) < 7 && !inst.inline ?
 			'<iframe src="javascript:false;" class="ui-datepicker-cover" frameborder="0"></iframe>' : '');
@@ -1702,15 +1707,21 @@ $.extend($.ui, { datetimepicker: { version: "1.0.0"} });
                 inst.currentAMPM = inst.selectedAMPM;
                 inst.currentMinute = inst.selectedMinute;
             }
-
-            var Hour = inst.currentHour;
-            if (Hour > 12)
-                Hour = Hour - 12;
+            var timepicker = this._get(inst, 'timepicker')
             inst.currentMonth += 1;
-            var MinuteString = inst.currentMinute;
-            if (MinuteString.length == 1)
-                MinuteString = "0" + MinuteString;
-            var DateString = '' + inst.currentMonth + '/' + inst.selectedDay + '/' + inst.selectedYear + ' ' + Hour + ':' + MinuteString + ' ' + inst.currentAMPM;
+            if(timepicker){
+               var Hour = inst.currentHour;
+               if (Hour > 12){
+                  Hour = Hour - 12;
+	       }
+               var MinuteString = inst.currentMinute;
+               if (MinuteString.length == 1){
+                  MinuteString = "0" + MinuteString;
+               }
+               var DateString = '' + inst.currentMonth + '/' + inst.selectedDay + '/' + inst.selectedYear + ' ' + Hour + ':' + MinuteString + ' ' + inst.currentAMPM;
+             }else{
+                  DateString = '' + inst.currentMonth + '/' + inst.selectedDay + '/' + inst.selectedYear 
+             }
             var date = new Date(DateString);
             return this.formatDate(this._get(inst, 'dateFormat'), date, this._getFormatConfig(inst));
         }
@@ -1887,3 +1898,27 @@ Date.prototype.format = function(mask, utc) {
     return RegexDateFormat(this, mask, utc);
 };
 
+Date.locale = {
+       monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+       dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+};
+
+//Get Month Name
+Date.prototype.getMonthName = function() {
+    return Date.locale.monthNames[this.getMonth()];
+}
+
+//Get Short Month Name
+Date.prototype.getShortMonthName = function() {
+    return Date.locale.monthNames[this.getMonth()].substr(0,3);
+}
+
+//Get Day Name
+Date.prototype.getDayName = function() {
+    return Date.locale.dayNames[this.getDay()];
+}
+
+//Get Short Day Name
+Date.prototype.getShortDayName = function() {
+    return Date.locale.dayNames[this.getDay()].substr(0,3);
+}
